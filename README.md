@@ -1,0 +1,2 @@
+# data_structures_and_algorithms_implementations
+In this repository I will publish implementations of data structures in C ( for a while just in C, but I want to make it in anothers languages) and implementations of algorithms (I will try to make in C, C++ and other languages, but the main languages is C and C++). I will start with the most basic structures.  Please if you see something wrong tell me.
