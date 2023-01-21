@@ -14,6 +14,7 @@ typedef struct node_ {
 
 typedef struct root_ {
     node *root_Of_the_rb_tree;
+    node *null_of_the_tree;
 } root;
 
 /* 
@@ -25,6 +26,10 @@ root *createRedBlackTree(int initialValue) {
     root *rootOfTheTree = malloc(sizeof(root));
     node *firstNode = malloc(sizeof(node));
     node *nullOfT = malloc(sizeof(node));
+    nullOfT->father = NULL;
+    nullOfT->left = NULL;
+    nullOfT->right = NULL;
+    nullOfT->value = 1;
     nullOfT->isNullOfT = 1;
     firstNode->value = initialValue;
     firstNode->father = nullOfT;
@@ -33,6 +38,7 @@ root *createRedBlackTree(int initialValue) {
     firstNode->isNullOfT = 0;
     firstNode->color = 1;
     rootOfTheTree->root_Of_the_rb_tree = firstNode;
+    rootOfTheTree->null_of_the_tree = nullOfT;
     return rootOfTheTree;
 };
 
@@ -50,13 +56,13 @@ void runThroughtTreeToPrint(node *nodeToStart) {
 }
 
 void leftRotation (root *Tree, node *nodeX) {
-    node *nodeY = nodeX->left;
+    node *nodeY = nodeX->right;
     nodeX->right = nodeY->left;
     if ( nodeY->left->isNullOfT != 1) {
         nodeY->left->father = nodeX;
     }
     nodeY->father = nodeX->father;
-    if (nodeX->father->isNullOfT == 1) {
+    if (nodeX->father == Tree->null_of_the_tree) {
         Tree->root_Of_the_rb_tree = nodeY;
     }else if (nodeX->father->left = nodeX) {
         nodeX->father->left = nodeY;
@@ -67,7 +73,52 @@ void leftRotation (root *Tree, node *nodeX) {
     nodeX->father = nodeY;
 }
 
+void rightRotation(root *Tree, node *nodeY) {
+    node *nodeX = nodeY->left;
+    nodeY->left = nodeX->right;
+    if (nodeX->right->isNullOfT != 1) {
+        nodeX->right->father = nodeY;
+    }
+    nodeX->father = nodeY->father;
+    if ( nodeY->father == Tree->null_of_the_tree ) {
+        Tree->root_Of_the_rb_tree = nodeX;
+    }else if (nodeY->father->left = nodeY) {
+        nodeY->father->left = nodeX;
+    }else {
+        nodeY->father->right = nodeX;
+    }
+    nodeX->right = nodeY;
+    nodeY->father = nodeX;
+}
 
+void fixInclusion(root *Tree, node *nodeInserted) {
+
+}
+
+void insertAnode( root *Tree, node *nodeToInsert ) {
+    node *nodeY = Tree->null_of_the_tree;
+    node *nodeX = Tree->root_Of_the_rb_tree;
+    while (nodeX != Tree->null_of_the_tree) {
+        nodeY = nodeX;
+        if (nodeToInsert->value < nodeX->value) {
+            nodeX = nodeX->left;
+        }else {
+            nodeX = nodeX->right;
+        }
+    }
+    nodeToInsert->father = nodeY;
+    if (nodeY = Tree->null_of_the_tree) {
+        Tree->root_Of_the_rb_tree = nodeToInsert;
+    }else if (nodeToInsert->value < nodeY->value) {
+        nodeY->left  = nodeToInsert;
+    }else {
+        nodeY->right = nodeToInsert;
+    }
+    nodeToInsert->left = Tree->null_of_the_tree;
+    nodeToInsert->right = Tree->null_of_the_tree;
+    nodeToInsert->color = 1;
+    fixInclusion(Tree, nodeToInsert);
+}
 
 int main () {
     return 0;
