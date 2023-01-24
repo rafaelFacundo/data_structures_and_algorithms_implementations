@@ -111,7 +111,21 @@ void fixInclusion(root *Tree, node *nodeInserted) {
                 rightRotation(Tree, nodeZ->father->father);
             }
         }else {
-            
+            node *nodeY = nodeZ->father->father->left;
+            if (nodeY->color = 1) {
+                nodeZ->father->color = 0;
+                nodeY->color = 0;
+                nodeZ = nodeZ->father;
+                nodeZ->color = 1;
+            }else {
+                if ( nodeZ = nodeZ->father->left ) {
+                    nodeZ = nodeZ->father;
+                    rightRotation(Tree, nodeZ);
+                }
+                nodeZ->father->color = 0;
+                nodeZ->father->father->color = 1;
+                leftRotation(Tree, nodeZ->father->father);
+            }
         }
     };
 }
