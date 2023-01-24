@@ -92,7 +92,28 @@ void rightRotation(root *Tree, node *nodeY) {
 }
 
 void fixInclusion(root *Tree, node *nodeInserted) {
-
+    node *nodeZ = nodeZ;
+    while ( nodeZ->father->color == 1 ) {
+        if (nodeZ->father == nodeZ->father->father->left) {
+            node *nodeY = nodeZ->father->father->right;
+            if (nodeY->color == 1) {
+                nodeZ->father->color = 0;
+                nodeY->color = 0;
+                nodeZ = nodeZ->father;
+                nodeZ->color = 1;
+            }else { 
+                if (nodeZ == nodeZ->father->right) {
+                    nodeZ = nodeZ->father;
+                    leftRotation(Tree, nodeZ);
+                }
+                nodeZ->father->color = 0;
+                nodeZ->father->father->color = 1;
+                rightRotation(Tree, nodeZ->father->father);
+            }
+        }else {
+            
+        }
+    };
 }
 
 void insertAnode( root *Tree, node *nodeToInsert ) {
