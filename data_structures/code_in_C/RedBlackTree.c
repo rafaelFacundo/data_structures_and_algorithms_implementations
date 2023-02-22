@@ -130,6 +130,17 @@ void fixInclusion(root *Tree, node *nodeInserted) {
     };
 }
 
+void transplant(root *Tree, node *u, node *v) {
+    if (u->father == Tree->null_of_the_tree) {
+        Tree->root_Of_the_rb_tree = v;
+    }else if (u == u->father->left) {
+        u->father->left = v;
+    }else {
+        u->father->right = v;
+    };
+    v->father = u->father;
+}
+
 void insertAnode( root *Tree, node *nodeToInsert ) {
     node *nodeY = Tree->null_of_the_tree;
     node *nodeX = Tree->root_Of_the_rb_tree;
@@ -153,6 +164,114 @@ void insertAnode( root *Tree, node *nodeToInsert ) {
     nodeToInsert->right = Tree->null_of_the_tree;
     nodeToInsert->color = 1;
     fixInclusion(Tree, nodeToInsert);
+};
+
+node *minimum(root *Tree, node *rootOfSomeTree) {
+    node *nodeToIterate = rootOfSomeTree;
+    while(nodeToIterate->left != Tree->null_of_the_tree) {
+        nodeToIterate = nodeToIterate->left;
+    };
+    return nodeToIterate;
+
+}
+
+node *maximum(root *Tree, node *rootOfSomeTree) {
+    node *nodeToIterate = rootOfSomeTree;
+    while(nodeToIterate->right != Tree->null_of_the_tree) {
+        nodeToIterate = nodeToIterate->right;
+    };
+    return nodeToIterate;
+}
+
+void fixRemoval(root *Tree, node *z) {
+    node *w;
+    node *x = z;
+    while (x != Tree->root_Of_the_rb_tree && x->color == 0) {
+        if (x = x->father->left) {
+            w = x->father->right;
+            if (w->color = 1) {
+                //case one
+                w->color = 0;
+                x->father->color = 1;
+                leftRotation(Tree, x->father);
+                w = x->father->right;
+            };
+            if ( w->left->color == 0 && w->right->color == 0 ) {
+                //case two
+                w->color = 1;
+                x = x->father;
+            }else {
+                if (w->right->color = 0) {
+                    //case three
+                    w->left->color = 0;
+                    w->color = 1;
+                    rightRotation(Tree, x->father);
+                    w = x->father->right;
+                }
+                w->color = x->father->color;
+                x->father->color = 0;
+                w->right->color = 0;
+                leftRotation(Tree, x->father);
+                x = Tree->root_Of_the_rb_tree;
+            };
+        }else {
+            w = x->father->left;
+            if (w->color = 1) {
+                //case one
+                w->color = 0;
+                x->father->color = 1;
+                rightRotation(Tree, x->father);
+                w = x->father->left;
+            }
+            if (w->right->color == 0 && w->right->color == 0) {
+                //case two
+                w->color = 1;
+                x = x->father;
+            }else {
+                //case three
+                if (w->left->color == 0) {
+                    w->right->color = 0;
+                    w->color = 1;
+                    leftRotation(Tree, x->father);
+                    w = x->father->right;
+                }
+                //case four
+                w->color = x->father->color;
+                x->father->color = 0;
+                x->right->color = 0;
+                rightRotation(Tree, x->father);
+                x = Tree->root_Of_the_rb_tree;
+            }
+        };
+        x->color = 0;
+    }
+}
+
+void removeNode(root *Tree, node *nodeToRemove) {
+    node *x;
+    node *y = nodeToRemove;
+    int originalColorOfY = y->color;
+    if (nodeToRemove->left == Tree->null_of_the_tree) {
+        x = nodeToRemove->right;
+        transplant(Tree, nodeToRemove, x);
+    }else if (nodeToRemove->right == Tree->null_of_the_tree) {
+        x = nodeToRemove->left;
+        transplant(Tree, nodeToRemove, x);
+    }else {
+        y = minimum(Tree,nodeToRemove->right);
+        x = y->right;
+        originalColorOfY = y->color;
+        transplant(Tree, y, x);
+        y->left = nodeToRemove->left;
+        nodeToRemove->left->father = y;
+        y->right = nodeToRemove->right;
+        nodeToRemove->right->father = y;
+        transplant(Tree, nodeToRemove, y);
+        y->color = nodeToRemove->color;
+    };
+    if (originalColorOfY == 0) {
+        fixRemoval(Tree, x);
+    }
 }
 
 int main () {

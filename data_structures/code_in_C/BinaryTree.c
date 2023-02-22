@@ -98,7 +98,7 @@ void removeNodeFromTree(root *Tree, node *nodeToBeRemoved) {
         transplant(Tree, nodeToBeRemoved, nodeToBeRemoved->left);
     }else {
         //getting the successor of the node to be removed
-        node *y = minimum(nodeToBeRemoved);
+        node *y = minimum(nodeToBeRemoved->right);
         transplant(Tree, y, y->right);
         y->left = nodeToBeRemoved->left;
         nodeToBeRemoved->left->father = y;
